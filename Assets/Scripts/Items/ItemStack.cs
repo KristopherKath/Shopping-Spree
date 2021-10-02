@@ -13,6 +13,7 @@ public class ItemStack : MonoBehaviour
 
     private void Awake()
     {
+        items = new Stack<Item>();
         player = GetComponent<Player>();
     }
 
@@ -23,6 +24,7 @@ public class ItemStack : MonoBehaviour
     //Adds an item to stack and handles total value/weight
     public void AddItem(Item i)
     {
+        Debug.Log("Adding Item to Stack");
         items.Push(i);
         totalValue += i.GetValue(); //add to total value collected
         totalWeight += i.GetWeight(); //add to total weight
@@ -34,6 +36,7 @@ public class ItemStack : MonoBehaviour
     //Pops item from stack and handles total value/weight
     public void RemoveItem()
     {
+        Debug.Log("Removing Item from Stack");
         Item i = items.Pop();
         totalValue -= i.GetValue(); //remove from total value collected
         totalWeight -= i.GetWeight(); //remove from total weight

@@ -47,11 +47,9 @@ public class Player : MonoBehaviour
         //Get force vector
         Vector2 force = movement * speed;
         
-        //if (force.magnitude > 0)
         //Apply acceleration to position
         AccelerateTo(force, maxAcceleration);
 
-        Debug.Log(rb.velocity.magnitude);
         //if the velocity is too high clamp it to max velocity
         if (rb.velocity.sqrMagnitude > maxVelocityMag * maxVelocityMag)
             rb.velocity = rb.velocity.normalized * maxVelocityMag;
@@ -66,10 +64,6 @@ public class Player : MonoBehaviour
 
         //Get the acceleration value
         Vector2 accel = deltaV / Time.deltaTime;
-
-        //Debug.Log("rb vel: " + rb.velocity);
-        //Debug.Log("delta vel: " + deltaV);
-        //Debug.Log("accel: " + accel.sqrMagnitude);
 
         //if the acceleration is greater than the max acceleration then clamp it
         if (accel.sqrMagnitude > maxAccel * maxAccel)
