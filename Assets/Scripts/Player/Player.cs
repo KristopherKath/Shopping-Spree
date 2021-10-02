@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     //Player Control variables
     [SerializeField] float speed = 25f;
     [SerializeField] float maxAcceleration = 5f;
+    [SerializeField] float maxVelocityMag = 100f;
 
     Rigidbody2D rb;
     Vector2 movement;
@@ -43,21 +44,39 @@ public class Player : MonoBehaviour
     //Handles player movement
     void Movement()
     {
+        //Get force vector
         Vector2 force = movement * speed;
+        
+        //if (force.magnitude > 0)
+        //Apply acceleration to position
         AccelerateTo(force, maxAcceleration);
+
+        Debug.Log(rb.velocity.magnitude);
+        //if the velocity is too high clamp it to max velocity
+        if (rb.velocity.sqrMagnitude > maxVelocityMag * maxVelocityMag)
+            rb.velocity = rb.velocity.normalized * maxVelocityMag;
+
     }
 
     //Helper function to accelerate up to a max acceleration
     void AccelerateTo(Vector2 targetVelocity, float maxAccel)
     {
+        //get the change in velocity
         Vector2 deltaV = targetVelocity - rb.velocity;
 
+        //Get the acceleration value
         Vector2 accel = deltaV / Time.deltaTime;
 
+        //Debug.Log("rb vel: " + rb.velocity);
+        //Debug.Log("delta vel: " + deltaV);
+        //Debug.Log("accel: " + accel.sqrMagnitude);
+
+        //if the acceleration is greater than the max acceleration then clamp it
         if (accel.sqrMagnitude > maxAccel * maxAccel)
             accel = accel.normalized * maxAccel;
 
-        rb.AddForce(accel, ForceMode2D.Force);
+        //apply acceleraition
+        rb.AddRelativeForce(accel, ForceMode2D.Force);
     }
 
 
