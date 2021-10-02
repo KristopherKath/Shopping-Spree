@@ -293,7 +293,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 54488200}
   m_LocalRotation: {x: 1.1e-44, y: -9e-44, z: 0, w: 1}
-  m_LocalPosition: {x: -4.58, y: 1.56, z: -2}
+  m_LocalPosition: {x: -5.51, y: 1.56, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1605915555}
@@ -1094,7 +1094,7 @@ GameObject:
   - component: {fileID: 367710730}
   m_Layer: 0
   m_Name: Item (2)
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1425,7 +1425,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.58, y: 1.56, z: -2}
+  m_LocalPosition: {x: -5.51, y: 1.56, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1441,6 +1441,7 @@ GameObject:
   m_Component:
   - component: {fileID: 581618618}
   - component: {fileID: 581618620}
+  - component: {fileID: 581618624}
   - component: {fileID: 581618619}
   - component: {fileID: 581618622}
   - component: {fileID: 581618621}
@@ -1460,7 +1461,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 581618617}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.08, y: 1.56, z: 0}
+  m_LocalPosition: {x: -5.51, y: 1.56, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1591,6 +1592,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3994375fdf4c6ac4d8a7632b65315181, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!58 &581618624
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581618617}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &627382162
 GameObject:
   m_ObjectHideFlags: 0
@@ -2305,7 +2322,7 @@ GameObject:
   - component: {fileID: 1086846934}
   m_Layer: 0
   m_Name: Item
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2708,7 +2725,7 @@ GameObject:
   - component: {fileID: 1259539151}
   m_Layer: 0
   m_Name: Item (1)
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3552,7 +3569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damping: {x: 0.1, y: 0.5, z: 0.3}
-  ShoulderOffset: {x: 0.5, y: -0.4, z: 0}
+  ShoulderOffset: {x: 0, y: -0.4, z: 0}
   VerticalArmLength: 0.4
   CameraSide: 1
   CameraDistance: 2
@@ -4641,7 +4658,7 @@ GameObject:
   - component: {fileID: 1910894466}
   m_Layer: 0
   m_Name: Item (3)
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

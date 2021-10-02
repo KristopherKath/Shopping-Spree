@@ -16,10 +16,15 @@ public class Player : MonoBehaviour
 
     Rigidbody2D rb;
     Vector2 movement;
+    float button;
+    bool grabbable = false;
+    Item grabbableItem;
+    ItemStack itemStack;
 
 
     private void Awake()
     {
+        itemStack = GetComponent<ItemStack>();
         rb = GetComponent<Rigidbody2D>();
         player = gameObject;
         playerInputActions = new PlayerInputActions(); //create input actions for referencing
@@ -33,12 +38,34 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        Movement();
+        ProcessInput();
+        
     }
 
+    //Gets values from player controller
     void GatherInput()
     {
         movement = playerInputActions.Gameplay.Movement.ReadValue<Vector2>(); //Get input vector 
+        button = playerInputActions.Gameplay.Pickup.ReadValue<float>();
+        Debug.Log(button);
+    }
+
+    //Processes player inputs
+    void ProcessInput()
+    {
+        Movement(); //process movement
+        GrabItem(); //process grabbing item
+    }
+
+    //Add item to item stack
+    void GrabItem()
+    {
+        if (grabbable && button > 0)
+        {
+            grabbable = false;
+            itemStack.AddItem(grabbableItem);
+            grabbableItem.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+        }
     }
 
     //Handles player movement
@@ -74,13 +101,36 @@ public class Player : MonoBehaviour
     }
 
 
+    //Add mass to rigidbody
     public void AddMass(float m)
     {
         rb.mass += m;
     }
+    //Lose mass from rigidbody
     public void LoseMass(float m)
     {
         rb.mass -= m;
+    }
+
+
+    //Handle grabbing items
+    private void OnTriggerEnter2D(Collider2D c)
+    {
+        if (c.gameObject.tag == "Item")
+        {
+            Debug.Log("Grab Item!");
+            grabbable = true;
+            grabbableItem = c.gameObject.GetComponent<Item>();
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D c)
+    {
+        if (c.gameObject.tag == "Item")
+        {
+            grabbable = false;
+            grabbableItem = null;
+        }
     }
 
 
