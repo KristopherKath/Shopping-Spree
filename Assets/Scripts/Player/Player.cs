@@ -24,9 +24,11 @@ public class Player : MonoBehaviour
     float button;
     float rotationInput;
 
+    Vector2 prevPos;
 
     private void Awake()
     {
+        prevPos = new Vector2(transform.position.x, transform.position.y);
         itemStack = GetComponent<ItemStack>();
         rb = GetComponent<Rigidbody2D>();
         player = gameObject;
@@ -48,15 +50,16 @@ public class Player : MonoBehaviour
     void GatherInput()
     {
         movement = playerInputActions.Gameplay.Movement.ReadValue<Vector2>(); //Get input vector 
-        rotationInput = playerInputActions.Gameplay.Rotation.ReadValue<float>();
         button = playerInputActions.Gameplay.Pickup.ReadValue<float>();
+        
+        //rotationInput = playerInputActions.Gameplay.Rotation.ReadValue<float>();
     }
 
     //Processes player inputs
     void ProcessInput()
     {
         Movement(); //process movement
-        Rotation(); //prcess rotation
+        //Rotation(); //prcess rotation
         GrabItem(); //process grabbing item
     }
 
@@ -74,18 +77,26 @@ public class Player : MonoBehaviour
     //Calculates rotation of player
     void Rotation()
     {
-        Debug.Log("Rot" + rotationInput);
+        /*
+        Vector2 myVector = transform.position - (Vector3)prevPos;
+        float angle = Vector2.Angle(Vector2.up, myVector);
+        rb.rotation = angle;
+
+        prevPos = new Vector2(transform.position.x, transform.position.y);
+
+        
+        Debug.Log(rotationInput);
+
         if (rotationInput > 0)
             transform.Rotate(-Vector3.forward * rotateSpeed * Time.deltaTime);
         else if (rotationInput < 0)
             transform.Rotate(Vector3.forward * rotateSpeed * Time.deltaTime);
-
+        */
     }
 
     //Handles player movement
     void Movement()
     {
-        Debug.Log("In move");
         //Get force vector
         Vector2 force = movement * speed;
         
@@ -116,24 +127,11 @@ public class Player : MonoBehaviour
     }
 
 
-    //Add mass to rigidbody
-    public void AddMass(float m)
-    {
-        rb.mass += m;
-    }
-    //Lose mass from rigidbody
-    public void LoseMass(float m)
-    {
-        rb.mass -= m;
-    }
-
-
     //Handle grabbing items
     private void OnTriggerEnter2D(Collider2D c)
     {
         if (c.gameObject.tag == "Item")
         {
-            Debug.Log("Grab Item!");
             grabbable = true;
             grabbableItem = c.gameObject.GetComponent<Item>();
         }
@@ -147,6 +145,28 @@ public class Player : MonoBehaviour
             grabbableItem = null;
         }
     }
+
+    //Add mass to rigidbody
+    public void AddMass(float m)
+    {
+        rb.mass += m;
+    }
+    //Lose mass from rigidbody
+    public void LoseMass(float m)
+    {
+        rb.mass -= m;
+    }
+
+    public void AddRotationalEffect(float rd)
+    {
+        rotateSpeed += rd;
+    }
+
+    public void RemoveRotationalEffect(float rd)
+    {
+        rotateSpeed -= rd;
+    }
+
 
 
 }
