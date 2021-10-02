@@ -5,21 +5,24 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    //Input variables
     GameObject player;
     PlayerInputActions playerInputActions;
 
     //Player Control variables
     [SerializeField] float speed = 25f;
+    [SerializeField] float rotateSpeed = 30f;
     [SerializeField] float maxAcceleration = 5f;
     [SerializeField] float maxVelocityMag = 100f;
 
     Rigidbody2D rb;
-    Vector2 movement;
-    float button;
     bool grabbable = false;
     Item grabbableItem;
     ItemStack itemStack;
+    
+    //Inputs
+    Vector2 movement;
+    float button;
+    float rotationInput;
 
 
     private void Awake()
@@ -39,21 +42,21 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         ProcessInput();
-        
     }
 
     //Gets values from player controller
     void GatherInput()
     {
         movement = playerInputActions.Gameplay.Movement.ReadValue<Vector2>(); //Get input vector 
+        rotationInput = playerInputActions.Gameplay.Rotation.ReadValue<float>();
         button = playerInputActions.Gameplay.Pickup.ReadValue<float>();
-        Debug.Log(button);
     }
 
     //Processes player inputs
     void ProcessInput()
     {
         Movement(); //process movement
+        Rotation(); //prcess rotation
         GrabItem(); //process grabbing item
     }
 
@@ -68,9 +71,21 @@ public class Player : MonoBehaviour
         }
     }
 
+    //Calculates rotation of player
+    void Rotation()
+    {
+        Debug.Log("Rot" + rotationInput);
+        if (rotationInput > 0)
+            transform.Rotate(-Vector3.forward * rotateSpeed * Time.deltaTime);
+        else if (rotationInput < 0)
+            transform.Rotate(Vector3.forward * rotateSpeed * Time.deltaTime);
+
+    }
+
     //Handles player movement
     void Movement()
     {
+        Debug.Log("In move");
         //Get force vector
         Vector2 force = movement * speed;
         
