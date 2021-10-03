@@ -19,8 +19,9 @@ public class ItemStack : MonoBehaviour
         cart = GameObject.FindGameObjectWithTag("Cart");
     }
 
-    float GetTotalWeight() => totalWeight;
-    int GetTotalValue() => totalValue;
+    public float GetTotalWeight() => totalWeight;
+    public int GetTotalValue() => totalValue;
+    public int GetItemCount() => items.Count;
 
     //removes a random amount of items when hit by hazard
     public void RemoveItems()
@@ -73,5 +74,7 @@ public class ItemStack : MonoBehaviour
         i.ItemRemoval(); //kills item
 
     }
+
+
 
 }

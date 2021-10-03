@@ -283,6 +283,12 @@
             "id": "4a4db755-534b-4d56-a16d-d2ffe327e744",
             "actions": [],
             "bindings": []
+        },
+        {
+            "name": "Disabled",
+            "id": "7e1be279-5958-480c-a59c-abcebfe5f98a",
+            "actions": [],
+            "bindings": []
         }
     ],
     "controlSchemes": []

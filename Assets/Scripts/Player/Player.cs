@@ -33,8 +33,9 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         player = gameObject;
         playerInputActions = new PlayerInputActions(); //create input actions for referencing
-        playerInputActions.Gameplay.Enable(); //Enable the gameplay action map
+        playerInputActions.Disabled.Enable();
     }
+
 
     private void Update()
     {
@@ -147,6 +148,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    #region Modifiers
     //Add mass to rigidbody
     public void AddMass(float m)
     {
@@ -167,7 +169,47 @@ public class Player : MonoBehaviour
     {
         rotateSpeed -= rd;
     }
+    #endregion
 
 
+    #region Input Enable/Disable
+    //gameplay input control
+    public void EnablePlayerGameplayInputMap()
+    {
+        DisableDisableInputMap();
+        DisableMenuInputMap();
 
+        playerInputActions.Gameplay.Enable(); //Enable the gameplay action map
+    }
+    public void DisablePlayerGameplayInputMap()
+    {
+        playerInputActions.Gameplay.Disable(); //Disable the gameplay action map
+    }
+
+    //menu input control
+    public void EnableMenuInputMap()
+    {
+        DisableDisableInputMap();
+        DisablePlayerGameplayInputMap();
+
+        playerInputActions.Menu.Enable();
+    }
+    public void DisableMenuInputMap()
+    {
+        playerInputActions.Menu.Disable();
+    }
+
+    //disable input control
+    public void EnableDisableInputMap()
+    {
+        DisablePlayerGameplayInputMap();
+        DisableMenuInputMap();
+
+        playerInputActions.Disabled.Enable();
+    }
+    public void DisableDisableInputMap()
+    {
+        playerInputActions.Disabled.Disable();
+    }
+    #endregion
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Hazard : MonoBehaviour
 {
+    [SerializeField] private bool canDie = false;
     [SerializeField] private float timeToWaitToDie = 0.5f;
 
     private void OnTriggerEnter2D(Collider2D c)
@@ -12,7 +13,9 @@ public class Hazard : MonoBehaviour
         {
             GetComponent<BoxCollider2D>().enabled = false;
             c.gameObject.GetComponent<ItemStack>().RemoveItems();
-            StartCoroutine(HazardEndRoutine());
+
+            if (canDie)
+                StartCoroutine(HazardEndRoutine());
         }
     }
 

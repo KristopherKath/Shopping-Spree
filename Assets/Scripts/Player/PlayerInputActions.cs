@@ -305,6 +305,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
             ""id"": ""4a4db755-534b-4d56-a16d-d2ffe327e744"",
             ""actions"": [],
             ""bindings"": []
+        },
+        {
+            ""name"": ""Disabled"",
+            ""id"": ""7e1be279-5958-480c-a59c-abcebfe5f98a"",
+            ""actions"": [],
+            ""bindings"": []
         }
     ],
     ""controlSchemes"": []
@@ -316,6 +322,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Gameplay_Rotation = m_Gameplay.FindAction("Rotation", throwIfNotFound: true);
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
+        // Disabled
+        m_Disabled = asset.FindActionMap("Disabled", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -445,6 +453,31 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         }
     }
     public MenuActions @Menu => new MenuActions(this);
+
+    // Disabled
+    private readonly InputActionMap m_Disabled;
+    private IDisabledActions m_DisabledActionsCallbackInterface;
+    public struct DisabledActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public DisabledActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputActionMap Get() { return m_Wrapper.m_Disabled; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(DisabledActions set) { return set.Get(); }
+        public void SetCallbacks(IDisabledActions instance)
+        {
+            if (m_Wrapper.m_DisabledActionsCallbackInterface != null)
+            {
+            }
+            m_Wrapper.m_DisabledActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+            }
+        }
+    }
+    public DisabledActions @Disabled => new DisabledActions(this);
     public interface IGameplayActions
     {
         void OnPickup(InputAction.CallbackContext context);
@@ -452,6 +485,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnRotation(InputAction.CallbackContext context);
     }
     public interface IMenuActions
+    {
+    }
+    public interface IDisabledActions
     {
     }
 }
