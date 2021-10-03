@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class Player : MonoBehaviour
 {
@@ -21,10 +22,15 @@ public class Player : MonoBehaviour
     
     //Inputs
     Vector2 movement;
-    float button;
+    float grabButton;
+    float pauseButton;
     float rotationInput;
-
     Vector2 prevPos;
+
+    public PauseMenu pauseMenu;
+    public GameObject pauseFirstButton;
+
+
 
     private void Awake()
     {
@@ -51,8 +57,9 @@ public class Player : MonoBehaviour
     void GatherInput()
     {
         movement = playerInputActions.Gameplay.Movement.ReadValue<Vector2>(); //Get input vector 
-        button = playerInputActions.Gameplay.Pickup.ReadValue<float>();
-        
+        grabButton = playerInputActions.Gameplay.Pickup.ReadValue<float>();
+        pauseButton = playerInputActions.Gameplay.Pause.ReadValue<float>();
+
         //rotationInput = playerInputActions.Gameplay.Rotation.ReadValue<float>();
     }
 
@@ -61,14 +68,32 @@ public class Player : MonoBehaviour
     {
         Movement(); //process movement
         GrabItem(); //process grabbing item
-        
+        PauseGame();
         //Rotation(); //prcess rotation
+    }
+
+    public void PauseGame()
+    {
+        if (pauseButton > 0)
+        {
+            OnPressPause();
+        }
+    }
+    public void OnPressPause()
+    {
+        if (!GameManager.Instance.gameOver)
+        {
+            pauseMenu.gameObject.SetActive(true);
+            pauseMenu.Pause();
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(pauseFirstButton);
+        }
     }
 
     //Add item to item stack
     void GrabItem()
     {
-        if (grabbable && button > 0)
+        if (grabbable && grabButton > 0)
         {
             grabbable = false;
             itemStack.AddItem(grabbableItem);

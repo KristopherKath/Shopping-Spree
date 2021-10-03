@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-
     public static event Action<GameState> OnGameStateChanged;
-
     [SerializeField] private GameObject gameEndButtonsGroup;
+
+    public GameObject gameEndFirstButton;
+
+    public bool gameOver;
 
     private GameState State;
     Player player;
@@ -21,6 +24,7 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
+        gameOver = false;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         UpdateGameState(GameState.GameIntro); //start game state to intro state
     }
@@ -60,8 +64,18 @@ public class GameManager : MonoBehaviour
 
     void GameEnd()
     {
+        //set game over
+        gameOver = true;
+
+        //disable player input
         player.DisablePlayerGameplayInputMap();
+
+        //show game end buttons
         gameEndButtonsGroup.SetActive(true);
+
+        //Set current selected button
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(gameEndFirstButton);
     }
 }
 
