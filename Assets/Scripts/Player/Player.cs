@@ -59,8 +59,9 @@ public class Player : MonoBehaviour
     void ProcessInput()
     {
         Movement(); //process movement
-        //Rotation(); //prcess rotation
         GrabItem(); //process grabbing item
+        
+        //Rotation(); //prcess rotation
     }
 
     //Add item to item stack

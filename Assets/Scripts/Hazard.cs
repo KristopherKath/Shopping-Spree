@@ -4,11 +4,21 @@ using UnityEngine;
 
 public class Hazard : MonoBehaviour
 {
+    [SerializeField] private float timeToWaitToDie = 0.5f;
+
     private void OnTriggerEnter2D(Collider2D c)
     {
         if (c.gameObject.tag == "Player")
         {
+            GetComponent<BoxCollider2D>().enabled = false;
             c.gameObject.GetComponent<ItemStack>().RemoveItems();
+            StartCoroutine(HazardEndRoutine());
         }
+    }
+
+    private IEnumerator HazardEndRoutine()
+    {
+        yield return new WaitForSeconds(timeToWaitToDie);
+        Destroy(gameObject);
     }
 }
