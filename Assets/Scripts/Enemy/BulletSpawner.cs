@@ -4,17 +4,25 @@ using UnityEngine;
 
 public class BulletSpawner : MonoBehaviour
 {
+    [Header("Throwing Variables")]
     [SerializeField] float timeTillSpawn = 5f;
     [SerializeField] float spawnOffset = 5f;
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] float bulletSpeed = 10f;
 
+    [Header("Animation Variables")]
+    [SerializeField] float throwAnimationTime = 0.5f;
+
+
     bool enableTimer = false;
     Vector3 spawnPos;
     float timeLeft;
+    private Animator animator;
+    bool throwAnimTrue;
 
     private void Awake()
     {
+        animator = GetComponent<Animator>();
         GameManager.OnGameStateChanged += GameManagerOnOnStateChanged;
     }
 
@@ -38,13 +46,13 @@ public class BulletSpawner : MonoBehaviour
         {
             if (timeLeft <= 0)
             {
-                //Debug.Log("SPAWN BULLET");
                 timeLeft = timeTillSpawn;
                 GameObject bulletInstance = Instantiate(bulletPrefab, spawnPos, transform.rotation);
                 bulletInstance.GetComponent<Rigidbody2D>().AddForce(transform.up * bulletSpeed);
-
+                StartCoroutine(AnimationRoutine());
             }
             timeLeft -= Time.deltaTime;
+            Animate();
         }
     }
 
@@ -55,5 +63,20 @@ public class BulletSpawner : MonoBehaviour
             enableTimer = true;
         else
             enableTimer = false;
+    }
+
+    IEnumerator AnimationRoutine()
+    {
+        throwAnimTrue = true;
+        yield return new WaitForSeconds(throwAnimationTime);
+        throwAnimTrue = false;
+    }
+
+    private void Animate()
+    {
+        if (throwAnimTrue)
+            animator.SetBool("isThrowing", true);
+        else
+            animator.SetBool("isThrowing", false);
     }
 }
