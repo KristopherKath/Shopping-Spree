@@ -12,6 +12,10 @@ public class ItemStack : MonoBehaviour
     float totalWeight = 0;
     int totalValue = 0;
 
+    //For removing item when player hit
+    [SerializeField] int minItemsToRemove = 1;
+    [SerializeField] int maxItemsToRemove = 3;
+
     private void Awake()
     {
         items = new Stack<Item>();
@@ -26,7 +30,7 @@ public class ItemStack : MonoBehaviour
     //removes a random amount of items when hit by hazard
     public void RemoveItems()
     {
-        int numToRemove = Random.Range(1, 3);
+        int numToRemove = Random.Range(minItemsToRemove, maxItemsToRemove);
 
         //Set num to remove to num left
         if (numToRemove > items.Count)
@@ -50,7 +54,7 @@ public class ItemStack : MonoBehaviour
         totalWeight += i.GetWeight(); //add to total weight
         player.AddMass(i.GetWeight()); //add mass to player
 
-        player.AddRotationalEffect(i.GetRotationalEffect); //add rotational decrese effect
+        //player.AddRotationalEffect(i.GetRotationalEffect); //add rotational decrese effect
 
         //Play add animation idealy
         i.gameObject.transform.SetParent(cart.transform, true); //set parent to cart
@@ -66,7 +70,7 @@ public class ItemStack : MonoBehaviour
         totalWeight -= i.GetWeight(); //remove from total weight
         player.LoseMass(i.GetWeight()); //remove mass from player
 
-        player.RemoveRotationalEffect(i.GetRotationalEffect); //remove rotational decrese effect
+        //player.RemoveRotationalEffect(i.GetRotationalEffect); //remove rotational decrese effect
         
         //Play remove animation idealy
         i.gameObject.transform.SetParent(null, true); //Set parent to nothing
@@ -74,7 +78,4 @@ public class ItemStack : MonoBehaviour
         i.ItemRemoval(); //kills item
 
     }
-
-
-
 }

@@ -39,6 +39,11 @@ public class Timer : MonoBehaviour
         }
     }
 
+    public void EndTimer()
+    {
+        timeTillEnd = 0;
+    }
+
     private void GameManagerOnOnStateChanged(GameState newState)
     {
         if (newState == GameState.GameStart)

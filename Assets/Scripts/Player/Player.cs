@@ -8,44 +8,90 @@ public class Player : MonoBehaviour
 {
     GameObject player;
     PlayerInputActions playerInputActions;
+    private Animator animator;
 
-    //Player Control variables
+
+    [SerializeField] float speedBoostTimer = 5f;
+    [Tooltip("Time for input disabled when hit")] [SerializeField] float timeForInputDisableOnHit = 1f;
+
+    [Header("Player Movement")]
     [SerializeField] float speed = 25f;
     [SerializeField] float rotateSpeed = 30f;
     [SerializeField] float maxAcceleration = 5f;
     [SerializeField] float maxVelocityMag = 100f;
+    [SerializeField] float maxAccelBoost = 4;
+    [SerializeField] float maxVelocityBoost = 4;
+
+
+    [Header("Player Sprite Stuff")]
+    [SerializeField] GameObject playerSprite;
+
+
+
 
     Rigidbody2D rb;
-    bool grabbable = false;
-    Item grabbableItem;
     ItemStack itemStack;
+    public bool isStunned = false;
     
     //Inputs
     Vector2 movement;
-    float grabButton;
     float pauseButton;
     float rotationInput;
     Vector2 prevPos;
 
+    //Used for pausing game
     public PauseMenu pauseMenu;
     public GameObject pauseFirstButton;
 
+    public bool GetIsStunned() => isStunned;
+
+    #region Debugging
+
+    void MovementDebug()
+    {
+        Debug.Log("Speed: " + speed);
+        Debug.Log("Max Acceleration: " + maxAcceleration);
+        Debug.Log("maxVelocityMag: " + maxVelocityMag);
+        Debug.Log("Velocity: " + rb.velocity);
+    }
+
+    private void OnDrawGizmos()
+    {
+        /*
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(transform.position, transform.position + playerSprite.transform.up);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3)movement);
+        */
+    }
+
+    #endregion
 
 
     private void Awake()
     {
         prevPos = new Vector2(transform.position.x, transform.position.y);
+
         itemStack = GetComponent<ItemStack>();
+
         rb = GetComponent<Rigidbody2D>();
+        rb.freezeRotation = true;
+
         player = gameObject;
+
         playerInputActions = new PlayerInputActions(); //create input actions for referencing
         playerInputActions.Disabled.Enable();
+
+        animator = GetComponentInChildren<Animator>();
     }
 
 
     private void Update()
     {
         GatherInput();
+        Animate();
+        RotateSprites();
     }
 
     void FixedUpdate()
@@ -53,35 +99,49 @@ public class Player : MonoBehaviour
         ProcessInput();
     }
 
+    //changes player animation states
+    private void Animate()
+    {
+        if (movement.magnitude > 0)
+            animator.SetBool("Run", true);
+        else
+            animator.SetBool("Run", false);
+    }
+
+
+    void RotateSprites()
+    {
+        float angle = Vector2.SignedAngle(playerSprite.transform.up, movement);
+
+        playerSprite.transform.RotateAround(playerSprite.transform.position, Vector3.forward, angle * Time.deltaTime * rotateSpeed);
+    }
+
+
     //Gets values from player controller
     void GatherInput()
     {
         movement = playerInputActions.Gameplay.Movement.ReadValue<Vector2>(); //Get input vector 
-        grabButton = playerInputActions.Gameplay.Pickup.ReadValue<float>();
-        pauseButton = playerInputActions.Gameplay.Pause.ReadValue<float>();
+        Debug.Log(movement.magnitude);
+        pauseButton = playerInputActions.Gameplay.Pause.ReadValue<float>(); //get pause value
 
-        //rotationInput = playerInputActions.Gameplay.Rotation.ReadValue<float>();
+        //rotationInput = playerInputActions.Gameplay.Rotation.ReadValue<float>(); //get rotation direction
     }
 
     //Processes player inputs
     void ProcessInput()
     {
         Movement(); //process movement
-        GrabItem(); //process grabbing item
-        PauseGame();
+        PauseGame(); //process pause
+
+
         //Rotation(); //prcess rotation
     }
 
-    public void PauseGame()
+    
+
+    private void PauseGame()
     {
-        if (pauseButton > 0)
-        {
-            OnPressPause();
-        }
-    }
-    public void OnPressPause()
-    {
-        if (!GameManager.Instance.gameOver)
+        if (pauseButton > 0 && !GameManager.Instance.gameOver)
         {
             pauseMenu.gameObject.SetActive(true);
             pauseMenu.Pause();
@@ -91,14 +151,10 @@ public class Player : MonoBehaviour
     }
 
     //Add item to item stack
-    void GrabItem()
+    void GrabItem(Item i)
     {
-        if (grabbable && grabButton > 0)
-        {
-            grabbable = false;
-            itemStack.AddItem(grabbableItem);
-            grabbableItem.gameObject.GetComponent<BoxCollider2D>().enabled = false;
-        }
+        itemStack.AddItem(i);
+        i.gameObject.GetComponent<BoxCollider2D>().enabled = false;
     }
 
     //Calculates rotation of player
@@ -127,13 +183,15 @@ public class Player : MonoBehaviour
         //Get force vector
         Vector2 force = movement * speed;
         
-        //Apply acceleration to position
-        AccelerateTo(force, maxAcceleration);
+        if (force == Vector2.zero)
+            rb.AddRelativeForce(Vector2.zero, ForceMode2D.Force);
+        else
+            //Apply acceleration to position
+            AccelerateTo(force, maxAcceleration);
 
         //if the velocity is too high clamp it to max velocity
         if (rb.velocity.sqrMagnitude > maxVelocityMag * maxVelocityMag)
             rb.velocity = rb.velocity.normalized * maxVelocityMag;
-
     }
 
     //Helper function to accelerate up to a max acceleration
@@ -159,21 +217,63 @@ public class Player : MonoBehaviour
     {
         if (c.gameObject.tag == "Item")
         {
-            grabbable = true;
-            grabbableItem = c.gameObject.GetComponent<Item>();
+            GrabItem(c.gameObject.GetComponent<Item>());
+        }
+        if (c.gameObject.tag == "SpeedBoost")
+        {
+            StartCoroutine(ApplySpeedBoost(c.gameObject.GetComponent<BoostItem>().GetSpeedBoost()));
+            Destroy(c.gameObject);
         }
     }
 
-    private void OnTriggerExit2D(Collider2D c)
-    {
-        if (c.gameObject.tag == "Item")
-        {
-            grabbable = false;
-            grabbableItem = null;
-        }
-    }
 
     #region Modifiers
+
+    IEnumerator inputDisable;
+
+    //Enables the stop input coroutine
+    public void StopMovement()
+    {
+        //if routine already called then stop it
+        if (inputDisable != null)
+            StopCoroutine(inputDisable);
+
+        inputDisable = DisableInputRoutine();
+        StartCoroutine(inputDisable);
+
+        StartCoroutine(InfinityFramesRoutine());
+    }
+
+    //disables input for set an amount of time
+    IEnumerator DisableInputRoutine()
+    {
+        EnableDisableInputMap();
+        yield return new WaitForSeconds(timeForInputDisableOnHit);
+        EnablePlayerGameplayInputMap();
+    }
+
+    //Gives player infinity frames after being hit
+    IEnumerator InfinityFramesRoutine()
+    {
+        isStunned = true;
+
+        yield return new WaitForSeconds(timeForInputDisableOnHit + 1f);
+
+        isStunned = false;
+    }
+
+    IEnumerator ApplySpeedBoost(float boostAmount)
+    {
+        speed += boostAmount;
+        maxAcceleration += maxAccelBoost;
+        maxVelocityMag += maxVelocityBoost;
+
+        yield return new WaitForSeconds(speedBoostTimer);
+        maxVelocityMag -= maxVelocityBoost;
+        maxAcceleration -= maxAccelBoost;
+        speed -= boostAmount;
+    }
+
     //Add mass to rigidbody
     public void AddMass(float m)
     {
@@ -187,12 +287,12 @@ public class Player : MonoBehaviour
 
     public void AddRotationalEffect(float rd)
     {
-        rotateSpeed += rd;
+        //rotateSpeed += rd;
     }
 
     public void RemoveRotationalEffect(float rd)
     {
-        rotateSpeed -= rd;
+        //rotateSpeed -= rd;
     }
     #endregion
 

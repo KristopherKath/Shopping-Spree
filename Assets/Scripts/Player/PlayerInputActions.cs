@@ -28,15 +28,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
             ""id"": ""c4a726be-2556-4e88-8b42-05afdcb80687"",
             ""actions"": [
                 {
-                    ""name"": ""Pickup"",
-                    ""type"": ""Button"",
-                    ""id"": ""a3b76e12-6385-4e5c-94ae-d0707a3930ec"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Movement"",
                     ""type"": ""Value"",
                     ""id"": ""bf2e9671-a4b5-44a1-a89e-0880b5937d4a"",
@@ -65,28 +56,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""aff18ec8-00e7-46a3-8e3c-29131c07950d"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Pickup"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f00c69a8-b09b-43ba-8260-0c5b04c35b94"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Pickup"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""8b278a4e-fb3d-463a-98ee-8b9f9bc36e73"",
@@ -348,7 +317,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
 }");
         // Gameplay
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
-        m_Gameplay_Pickup = m_Gameplay.FindAction("Pickup", throwIfNotFound: true);
         m_Gameplay_Movement = m_Gameplay.FindAction("Movement", throwIfNotFound: true);
         m_Gameplay_Rotation = m_Gameplay.FindAction("Rotation", throwIfNotFound: true);
         m_Gameplay_Pause = m_Gameplay.FindAction("Pause", throwIfNotFound: true);
@@ -415,7 +383,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     // Gameplay
     private readonly InputActionMap m_Gameplay;
     private IGameplayActions m_GameplayActionsCallbackInterface;
-    private readonly InputAction m_Gameplay_Pickup;
     private readonly InputAction m_Gameplay_Movement;
     private readonly InputAction m_Gameplay_Rotation;
     private readonly InputAction m_Gameplay_Pause;
@@ -423,7 +390,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     {
         private @PlayerInputActions m_Wrapper;
         public GameplayActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Pickup => m_Wrapper.m_Gameplay_Pickup;
         public InputAction @Movement => m_Wrapper.m_Gameplay_Movement;
         public InputAction @Rotation => m_Wrapper.m_Gameplay_Rotation;
         public InputAction @Pause => m_Wrapper.m_Gameplay_Pause;
@@ -436,9 +402,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_GameplayActionsCallbackInterface != null)
             {
-                @Pickup.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPickup;
-                @Pickup.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPickup;
-                @Pickup.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPickup;
                 @Movement.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMovement;
                 @Movement.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMovement;
                 @Movement.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMovement;
@@ -452,9 +415,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Pickup.started += instance.OnPickup;
-                @Pickup.performed += instance.OnPickup;
-                @Pickup.canceled += instance.OnPickup;
                 @Movement.started += instance.OnMovement;
                 @Movement.performed += instance.OnMovement;
                 @Movement.canceled += instance.OnMovement;
@@ -520,7 +480,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     public DisabledActions @Disabled => new DisabledActions(this);
     public interface IGameplayActions
     {
-        void OnPickup(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
         void OnRotation(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);

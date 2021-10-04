@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour
 
     public void UpdateGameState(GameState newState)
     {
-        Debug.Log("Game State Change: " + newState);
         State = newState;
 
         switch (newState)

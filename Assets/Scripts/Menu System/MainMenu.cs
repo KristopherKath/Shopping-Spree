@@ -10,6 +10,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private int sceneBuildIndex = -1;
 
     public GameObject optionsFirstButton;
+    public GameObject creditsFirstButton;
 
     public void PlayGame()
     {
@@ -29,6 +30,12 @@ public class MainMenu : MonoBehaviour
     {
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(optionsFirstButton);
+    }
+
+    public void ToCreditsPage()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(creditsFirstButton);
     }
 
 
