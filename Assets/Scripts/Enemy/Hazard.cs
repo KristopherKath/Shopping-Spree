@@ -21,7 +21,7 @@ public class Hazard : MonoBehaviour
                 GetComponent<BoxCollider2D>().enabled = true;
 
             //Only take items and stop movement if they arent hit already
-            if (c.gameObject.GetComponent<Player>().GetIsStunned())
+            if (!c.gameObject.GetComponent<Player>().GetIsStunned())
             {
                 c.gameObject.GetComponent<ItemStack>().RemoveItems(); //remove random amount of items
                 c.gameObject.GetComponent<Player>().StopMovement(); //stops player movement for a little
