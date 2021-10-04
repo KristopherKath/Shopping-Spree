@@ -121,10 +121,7 @@ public class Player : MonoBehaviour
     void GatherInput()
     {
         movement = playerInputActions.Gameplay.Movement.ReadValue<Vector2>(); //Get input vector 
-        Debug.Log(movement.magnitude);
         pauseButton = playerInputActions.Gameplay.Pause.ReadValue<float>(); //get pause value
-
-        //rotationInput = playerInputActions.Gameplay.Rotation.ReadValue<float>(); //get rotation direction
     }
 
     //Processes player inputs
@@ -132,9 +129,6 @@ public class Player : MonoBehaviour
     {
         Movement(); //process movement
         PauseGame(); //process pause
-
-
-        //Rotation(); //prcess rotation
     }
 
     
@@ -155,26 +149,6 @@ public class Player : MonoBehaviour
     {
         itemStack.AddItem(i);
         i.gameObject.GetComponent<BoxCollider2D>().enabled = false;
-    }
-
-    //Calculates rotation of player
-    void Rotation()
-    {
-        /*
-        Vector2 myVector = transform.position - (Vector3)prevPos;
-        float angle = Vector2.Angle(Vector2.up, myVector);
-        rb.rotation = angle;
-
-        prevPos = new Vector2(transform.position.x, transform.position.y);
-
-        
-        Debug.Log(rotationInput);
-
-        if (rotationInput > 0)
-            transform.Rotate(-Vector3.forward * rotateSpeed * Time.deltaTime);
-        else if (rotationInput < 0)
-            transform.Rotate(Vector3.forward * rotateSpeed * Time.deltaTime);
-        */
     }
 
     //Handles player movement

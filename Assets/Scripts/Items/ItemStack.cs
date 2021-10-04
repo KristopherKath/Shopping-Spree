@@ -36,8 +36,6 @@ public class ItemStack : MonoBehaviour
         if (numToRemove > items.Count)
             numToRemove = items.Count;
 
-        Debug.Log("Removing " + numToRemove + " items");
-
         for (int i = 0; i < numToRemove; i++)
         {
             RemoveItem();

@@ -15,7 +15,6 @@ public class Hazard : MonoBehaviour
     {
         if (c.gameObject.tag == "Player")
         {
-            Debug.Log("PLAYER HIT");
             //if not projectile disable collider to not remove more items
             if (!isProjectile)
                 GetComponent<BoxCollider2D>().enabled = true;
@@ -40,7 +39,6 @@ public class Hazard : MonoBehaviour
     //used for bullets
     private void OnCollisionEnter2D(Collision2D c)
     {
-        Debug.Log("destroy projectile");
         //destroys projectile
         if (isProjectile)
         {

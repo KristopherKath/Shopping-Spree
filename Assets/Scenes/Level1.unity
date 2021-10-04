@@ -7210,7 +7210,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -11593,23 +11593,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2843035183702702775, guid: 81b57208c11590646845cbd0debf4319, type: 3}
       propertyPath: m_Size.x
-      value: 0.15038365
+      value: 0.13797316
       objectReference: {fileID: 0}
     - target: {fileID: 2843035183702702775, guid: 81b57208c11590646845cbd0debf4319, type: 3}
       propertyPath: m_Size.y
-      value: 0.17987967
+      value: 0.16287196
       objectReference: {fileID: 0}
     - target: {fileID: 2843035183702702775, guid: 81b57208c11590646845cbd0debf4319, type: 3}
       propertyPath: m_Offset.x
-      value: 0.00082057714
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2843035183702702775, guid: 81b57208c11590646845cbd0debf4319, type: 3}
       propertyPath: m_Offset.y
-      value: 0.022555772
+      value: 0.016972274
       objectReference: {fileID: 0}
     - target: {fileID: 2843035183702702796, guid: 81b57208c11590646845cbd0debf4319, type: 3}
       propertyPath: m_Radius
-      value: 0.10221434
+      value: 0.107533135
       objectReference: {fileID: 0}
     - target: {fileID: 2843035183702702796, guid: 81b57208c11590646845cbd0debf4319, type: 3}
       propertyPath: m_Enabled
@@ -11621,7 +11621,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2843035183702702796, guid: 81b57208c11590646845cbd0debf4319, type: 3}
       propertyPath: m_Offset.y
-      value: 0.023181599
+      value: 0.017862797
       objectReference: {fileID: 0}
     - target: {fileID: 2843035183783177010, guid: 81b57208c11590646845cbd0debf4319, type: 3}
       propertyPath: m_RootOrder
