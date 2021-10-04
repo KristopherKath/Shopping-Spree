@@ -26,9 +26,6 @@ public class Player : MonoBehaviour
     [Header("Player Sprite Stuff")]
     [SerializeField] GameObject playerSprite;
 
-
-
-
     Rigidbody2D rb;
     ItemStack itemStack;
     public bool isStunned = false;
